@@ -46,6 +46,13 @@ function endTouch() {
   dragging = false;
   cancelAnimationFrame(animationID);
 
+  const movedBy = currentTranslate - previousTranslate;
+
+  if (movedBy < -100 && currentIndex < slides.length - 1) currentIndex += 1;
+  if (movedBy > 100 && currentIndex > 0) currentIndex -= 1;
+
+  setPositionByIndex();
+
   slider.classList.remove('grabbing');
 }
 
@@ -67,4 +74,10 @@ function animation() {
 
 function setSliderPosition() {
   slider.style.transform = `translateX(${currentTranslate}px)`;
+}
+
+function setPositionByIndex() {
+  currentTranslate = currentIndex * -window.innerWidth;
+  previousTranslate = currentTranslate;
+  setSliderPosition();
 }
