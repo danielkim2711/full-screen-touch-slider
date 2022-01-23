@@ -24,6 +24,12 @@ slides.forEach((slide, index) => {
   slide.addEventListener('mousemove', moveTouch);
 });
 
+window.oncontextmenu = (event) => {
+  event.preventDefault();
+  event.stopPropagation();
+  return false;
+};
+
 function startTouch(index) {
   return function (event) {
     console.log('start');
