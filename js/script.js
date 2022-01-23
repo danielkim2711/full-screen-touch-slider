@@ -24,6 +24,7 @@ slides.forEach((slide, index) => {
   slide.addEventListener('mousemove', moveTouch);
 });
 
+// Disable context menu
 window.oncontextmenu = (event) => {
   event.preventDefault();
   event.stopPropagation();
@@ -32,18 +33,38 @@ window.oncontextmenu = (event) => {
 
 function startTouch(index) {
   return function (event) {
-    console.log('start');
+    currentIndex = index;
+    startPosition = getPositionX(event);
     dragging = true;
+
+    animationID = requestAnimationFrame(animation);
+    slider.classList.add('grabbing');
   };
 }
 
 function endTouch() {
-  console.log('end');
   dragging = false;
+  cancelAnimationFrame(animationID);
+
+  slider.classList.remove('grabbing');
 }
 
-function moveTouch() {
+function moveTouch(event) {
   if (dragging) {
-    console.log('move');
+    const currentPosition = getPositionX(event);
+    currentTranslate = previousTranslate + currentPosition - startPosition;
   }
+}
+
+function getPositionX(event) {
+  return event.type.includes('mouse') ? event.pageX : event.touches[0].clientX;
+}
+
+function animation() {
+  setSliderPosition();
+  if (dragging) requestAnimationFrame(animation);
+}
+
+function setSliderPosition() {
+  slider.style.transform = `translateX(${currentTranslate}px)`;
 }
